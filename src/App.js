@@ -1,13 +1,20 @@
-import React, {useState} from 'react';
- function App() {
+import React from 'react';
+// global style
+import {GlobalStyle} from "./GlobalStyle";
+
+// components
+import Header from "./components/Header";
+import Home from "./components/Home";
 
 
+function App() {
 
       return (
           <div className="App">
-              React dev I'm !
+              <Header/>
+              <Home/>
+              <GlobalStyle/>
           </div>
-
       )
 }
 
