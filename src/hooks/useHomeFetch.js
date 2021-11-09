@@ -1,7 +1,7 @@
 import API from "../API";
 import {useEffect, useState, useRef } from "react";
 
-const initialState = {
+export const initialState = {
     page: 0,
     results: [],
     total_pages: 0,
@@ -9,9 +9,14 @@ const initialState = {
 }
 
 export const useHomeFetch = () => {
+    const [SearchTerm, setSearchTerm] = useState('');
     const [state, setState] = useState(initialState);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
+    const  [page, setPage] = useState(1)
+    const [isLoadingMore, setIsLoadingMore] = useState(false)
+
+    console.log(page)
 
     const fetchMovies = async (page, searchTerm = "") => {
         try {
@@ -28,12 +33,23 @@ export const useHomeFetch = () => {
         }catch (error){
             setError(true)
         }
+        // finally
         setLoading(false);
     };
-    // Initial render
+    // Initial and search
     useEffect(() => {
-        fetchMovies(1);
-    }, [])
+        setState(initialState);
+        fetchMovies(1, SearchTerm);
+    }, [SearchTerm])
 
-    return {state, loading, error}
+    // Loading more
+    useEffect(() => {
+        if(!isLoadingMore) return;
+        fetchMovies(state.page + 1, SearchTerm)
+        setIsLoadingMore(false)
+    }, [isLoadingMore, SearchTerm, state.page])
+
+    //fetchMovies(1);
+    //console.log(state)
+    return {state, loading, error, SearchTerm, setSearchTerm, setPage, setIsLoadingMore}
 }
